@@ -160,7 +160,26 @@ def EC_POINT_MUL(pub_factor1, priv_factor2) -> ec._EllipticCurvePublicKey:
     Performs an OpenSSL EC_POINT_mul on an EllipticCurvePublicKey with an
     EllipticCurvePrivateKey and returns the result in an EllipticCurvePublicKey.
     """
-    pass
+    group = backend._lib.EC_KEY_get0_group(pub_factor1._ec_key)
+    backend.openssl_assert(group != backend._ffi.NULL)
+
+    point_a = backend._lib.EC_KEY_get0_public_key(pub_factor1._ec_key)
+    backend.openssl_assert(point_a != backend._ffi.NULL)
+
+    priv_b = backend._lib.EC_KEY_get0_private_key(priv_factor2._ec_key)
+    backend.openssl_assert(priv_b != backend._ffi.NULL)
+
+    prod = backend._lib.EC_POINT_new(group)
+    backend.openssl_assert(prod != backend._ffi.NULL)
+    prod = backend._ffi.gc(prod, backend._lib.EC_POINT_free)
+
+    with backend._tmp_bn_ctx() as bn_ctx:
+        res = backend._lib.EC_POINT_mul(
+            group, prod, backend._ffi.NULL, point_a, priv_b, bn_ctx
+        )
+        backend.openssl_assert(res == 1)
+
+    return ec._point_to_public_key(backend, group, prod)
 
 
 def EC_POINT_INVERT(pub_a) -> ec._EllipticCurvePublicKey:
@@ -168,7 +187,23 @@ def EC_POINT_INVERT(pub_a) -> ec._EllipticCurvePublicKey:
     Performs an OpenSSL EC_POINT_invert on an EllipticCurvePublicKey and returns
     the result in an EllipticCurvePublicKey.
     """
-    pass
+    group = backend._lib.EC_KEY_get0_group(pub_a._ec_key)
+    backend.openssl_assert(group != backend._ffi.NULL)
+
+    point_a = backend._lib.EC_KEY_get0_public_key(pub_a._ec_key)
+    backend.openssl_assert(point_a != backend._ffi.NULL)
+
+    inv = backend._lib.EC_POINT_dup(point_a, group)
+    backend.openssl_assert(inv != backend._ffi.NULL)
+    inv = backend._ffi.gc(inv, backend._lib.EC_POINT_free)
+
+    with backend._tmp_bn_ctx() as bn_ctx:
+        res = backend._lib.EC_POINT_invert(
+            group, inv, bn_ctx
+        )
+        backend.openssl_assert(res == 1)
+
+    return ec._point_to_public_key(backend, group, inv)
 
 
 def EC_POINT_ADD(pub_a, pub_b) -> ec._EllipticCurvePublicKey:
@@ -176,7 +211,33 @@ def EC_POINT_ADD(pub_a, pub_b) -> ec._EllipticCurvePublicKey:
     Performs an OpenSSL EC_POINT_add on two EllipticCurvePublicKeys and returns
     the result in an EllipticCurvePublicKey.
     """
-    pass
+    group_a = backend._lib.EC_KEY_get0_group(pub_a._ec_key)
+    backend.openssl_assert(group_a != backend._ffi.NULL)
+
+    group_b = backend._lib.EC_KEY_get0_group(pub_b._ec_key)
+    backend.openssl_assert(group_b != backend._ffi.NULL)
+
+    point_a = backend._lib.EC_KEY_get0_public_key(pub_a._ec_key)
+    backend.openssl_assert(point_a != backend._ffi.NULL)
+
+    point_b = backend._lib.EC_KEY_get0_public_key(pub_b._ec_key)
+    backend.openssl_assert(point_b != backend._ffi.NULL)
+
+    sum = backend._lib.EC_POINT_new(group_a)
+    backend.openssl_assert(sum != backend._ffi.NULL)
+    sum = backend._ffi.gc(sum, backend._lib.EC_POINT_free)
+
+    with backend._tmp_bn_ctx() as bn_ctx:
+        curve_a = backend._lib.EC_GROUP_get_curve_name(group_a)
+        curve_b = backend._lib.EC_GROUP_get_curve_name(group_b)
+        backend.openssl_assert(curve_a == curve_b)
+
+        res = backend._lib.EC_POINT_add(
+            group_a, sum, point_a, point_b, bn_ctx
+        )
+        backend.openssl_assert(res == 1)
+
+    return ec._point_to_public_key(backend, group_a, sum)
 
 
 def EC_POINT_SUB(pub_a, pub_b) -> ec._EllipticCurvePublicKey:
@@ -185,4 +246,6 @@ def EC_POINT_SUB(pub_a, pub_b) -> ec._EllipticCurvePublicKey:
     another EllipticCurvePublicKey and returns the result in an
     EllipticCurvePublicKey.
     """
-    pass
+    pub_b = EC_POINT_INVERT(pub_b)
+
+    return EC_POINT_ADD(pub_a, pub_b)
