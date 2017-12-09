@@ -46,3 +46,8 @@ pub_c = ops.EC_POINT_SUB(pub_a, pub_b)
 ecdh_point = ops.EC_POINT_MUL(pub_a, priv_b)
 shared_secret = ecdh_point.public_numbers().x.to_bytes(32, 'big')
 ```
+
+# Installation:
+1. Clone or download the repository
+2. Ensure that you have cryptography.io install (`pip install cryptography`)
+3. `python setup.py install`
