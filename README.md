@@ -51,3 +51,17 @@ shared_secret = ecdh_point.public_numbers().x.to_bytes(32, 'big')
 1. Clone or download the repository
 2. Ensure that you have cryptography.io install (`pip install cryptography`)
 3. `python setup.py install`
+
+# TODO:
+1. Testing!
+2. Get setup on pypy.
+
+Pull Requests are welcome!
+
+Donations accepted:
+
+3LtQheFpRgKy828GJXAgjL3UN6QFg3AiHL (BTC)
+
+MSC1jLgsWPKgVgqsM2Cs7UBufEgLmPZTE4 (LTC)
+
+0x2D9D6335074Dd581c24EE138f96c1655a107Ef05 (ETH)
