@@ -1,7 +1,7 @@
 # hazmat-math
 Hazmat ECC arithmetic for Cryptography.io
 
-Hazmat math implements some basic ECC arithmetic for use with Cryptography.io objects. Specifically, `_EllipticCurvePrivateKey` and `_EllipticCurvePublicKey`.
+Hazmat math implements some basic ECC arithmetic for use with Cryptography.io objects using the OpenSSL backend. Specifically, `_EllipticCurvePrivateKey` and `_EllipticCurvePublicKey`.
 
 Any operations with `EC_POINT` will return an `_EllipticCurvePublicKey` and any operations with `BN` will return an `_EllipticCurvePrivateKey`.
 
@@ -25,7 +25,7 @@ pub_b = priv_b.public_key()
 
 # Multiplication
 priv_c = ops.BN_MOD_MUL(priv_a, priv_b)
-pub_c = ops.EC_POINT_MUL((pub_a, priv_a)
+pub_c = ops.EC_POINT_MUL(pub_a, priv_a)
 
 # Division
 priv_c = ops.BN_DIV(priv_a, priv_b)
