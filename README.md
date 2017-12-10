@@ -41,10 +41,6 @@ pub_c = ops.EC_POINT_ADD(pub_a, pub_b)
 # Subtraction
 priv_c = ops.BN_MOD_SUB(priv_a, priv_b)
 pub_c = ops.EC_POINT_SUB(pub_a, pub_b)
-
-# ECDH example:
-ecdh_point = ops.EC_POINT_MUL(pub_a, priv_b)
-shared_secret = ecdh_point.public_numbers().x.to_bytes(32, 'big')
 ```
 
 # Installation:
