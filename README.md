@@ -8,6 +8,7 @@ Any operations with `EC_POINT` will return an `_EllipticCurvePublicKey` and any 
 ### WARNING:
 1. If you don't know what you're doing, you probably shouldn't be using this library.
 2. This hasn't had an official security audit. (They are welcome, though.)
+3. This hasn't been tested on non-prime order curves (e.g. Curve25519). It is not believed by the author to work on these curves.
 
 # Usage:
 ```
@@ -51,6 +52,10 @@ pub_c = ops.EC_POINT_SUB(pub_a, pub_b)
 # TODO:
 1. Testing!
 2. Get setup on pypy.
+3. Extend arithmetic functionality
+4. Expose curve generator point
+
+#
 
 Pull Requests are welcome!
 
