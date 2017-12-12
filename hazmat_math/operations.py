@@ -257,3 +257,28 @@ def EC_POINT_SUB(pub_a, pub_b) -> _EllipticCurvePublicKey:
     pub_b = EC_POINT_INVERT(pub_b)
 
     return EC_POINT_ADD(pub_a, pub_b)
+
+
+def EC_GET_GENERATOR(curve) -> _EllipticCurvePublicKey:
+    """
+    Returns the generator point of the curve provided.
+    This returns it as a public key to use in the above operations, if needed.
+    """
+    curve_nid = backend._elliptic_curve_to_nid(curve)
+
+    group = backend._lib.EC_GROUP_new_by_curve_name(curve_nid)
+    backend.openssl_assert(group != backend._ffi.NULL)
+
+    gen_point = backend._lib.EC_POINT_new(group)
+    backend.openssl_assert(gen_point != backend._ffi.NULL)
+    gen_point = backend._ffi.gc(gen_point, backend._lib.EC_POINT_free)
+
+    generator = backend._lib.EC_GROUP_get0_generator(group)
+    backend.openssl_assert(generator != backend._ffi.NULL)
+
+    res = backend._lib.EC_POINT_copy(
+        gen_point, generator
+    )
+    backend.openssl_assert(res == 1)
+
+    return _point_to_public_key(backend, group, generator)
