@@ -42,6 +42,9 @@ pub_c = ops.EC_POINT_ADD(pub_a, pub_b)
 # Subtraction
 priv_c = ops.BN_MOD_SUB(priv_a, priv_b)
 pub_c = ops.EC_POINT_SUB(pub_a, pub_b)
+
+# Get generator point from curve
+gen_point = ops.EC_GET_GENERATOR(ec.SECP256K1())
 ```
 
 # Installation:
@@ -53,7 +56,6 @@ pub_c = ops.EC_POINT_SUB(pub_a, pub_b)
 1. Testing!
 2. Get setup on pypy.
 3. Extend arithmetic functionality
-4. Expose curve generator point
 
 #
 
