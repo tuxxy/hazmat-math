@@ -259,7 +259,7 @@ def EC_POINT_SUB(pub_a, pub_b) -> _EllipticCurvePublicKey:
     return EC_POINT_ADD(pub_a, pub_b)
 
 
-def EC_GET_GENERATOR(curve) -> _EllipticCurvePublicKey:
+def CURVE_GET_GENERATOR(curve) -> _EllipticCurvePublicKey:
     """
     Returns the generator point of the curve provided.
     This returns it as a public key to use in the above operations, if needed.
@@ -282,3 +282,24 @@ def EC_GET_GENERATOR(curve) -> _EllipticCurvePublicKey:
     backend.openssl_assert(res == 1)
 
     return _point_to_public_key(backend, group, generator)
+
+
+def CURVE_GET_ORDER(curve) -> _EllipticCurvePrivateKey:
+    """
+    Returns the order of the curve provided.
+    This returns it as a private key to use in the above operations, if needed.
+    """
+    curve_nid = backend._elliptic_curve_to_nid(curve)
+
+    group = backend._lib.EC_GROUP_new_by_curve_name(curve_nid)
+    backend.openssl_assert(group != backend._ffi.NULL)
+
+    order = backend._lib.BN_new()
+    backend.openssl_assert(order != backend._ffi.NULL)
+    order = backend._ffi.gc(order, backend._lib.BN_free)
+
+    with backend._tmp_bn_ctx() as bn_ctx:
+        res = backend._lib.EC_GROUP_get_order(group, order, bn_ctx)
+        backend.openssl_assert(res == 1)
+
+    return _bignum_to_private_key(backend, group, order)

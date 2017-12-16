@@ -44,7 +44,10 @@ priv_c = ops.BN_MOD_SUB(priv_a, priv_b)
 pub_c = ops.EC_POINT_SUB(pub_a, pub_b)
 
 # Get generator point from curve
-gen_point = ops.EC_GET_GENERATOR(ec.SECP256K1())
+gen_point = ops.CURVE_GET_GENERATOR(ec.SECP256K1())
+
+# Get order of curve
+order = ops.CURVE_GET_ORDER(ec.SECP256K1())
 ```
 
 # Installation:
