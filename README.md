@@ -1,14 +1,10 @@
 # hazmat-math
 Hazmat ECC arithmetic for Cryptography.io
 
-Hazmat math implements some basic ECC arithmetic for use with Cryptography.io objects using the OpenSSL backend. Specifically, `_EllipticCurvePrivateKey` and `_EllipticCurvePublicKey`.
+Hazmat math implements some basic ECC arithmetic for use with Cryptography.io objects using the OpenSSL backend.
+Specifically, `_EllipticCurvePrivateKey` and `_EllipticCurvePublicKey`.
 
 Any operations with `EC_POINT` will return an `_EllipticCurvePublicKey` and any operations with `BN` will return an `_EllipticCurvePrivateKey`.
-
-### WARNING:
-1. If you don't know what you're doing, you probably shouldn't be using this library.
-2. This hasn't had an official security audit. (They are welcome, though.)
-3. This hasn't been tested on non-prime order curves (e.g. Curve25519). It is not believed by the author to work on these curves.
 
 # Usage:
 ```
@@ -58,16 +54,3 @@ order = ops.CURVE_GET_ORDER(ec.SECP256K1())
 # TODO:
 1. Testing!
 2. Get setup on pypy.
-3. Extend arithmetic functionality
-
-#
-
-Pull Requests are welcome!
-
-Donations accepted:
-
-3LtQheFpRgKy828GJXAgjL3UN6QFg3AiHL (BTC)
-
-MSC1jLgsWPKgVgqsM2Cs7UBufEgLmPZTE4 (LTC)
-
-0x2D9D6335074Dd581c24EE138f96c1655a107Ef05 (ETH)
